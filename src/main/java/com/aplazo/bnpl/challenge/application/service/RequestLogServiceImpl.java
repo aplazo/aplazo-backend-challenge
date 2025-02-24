@@ -37,6 +37,7 @@ public class RequestLogServiceImpl implements RequestLogService {
      * @param responsePayload The payload received in the response.
      * @param duration       The duration of the request in milliseconds.
      */
+    @Override
     public void logRequest(String ip, String httpMethod, String method, String requestPayload, String responsePayload, long duration) {
         RequestLog requestLog = new RequestLog();
 
@@ -56,9 +57,9 @@ public class RequestLogServiceImpl implements RequestLogService {
      *
      * @return A list of all `RequestLog` entities.
      */
+    @Override
     public List<RequestLog> getAllLogs() {
         return requestLogRepository.findAll();
     }
-
 
 }

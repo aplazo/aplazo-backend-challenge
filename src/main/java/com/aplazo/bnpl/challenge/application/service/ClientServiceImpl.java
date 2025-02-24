@@ -20,6 +20,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Transactional
+    @Override
     public ClientResponse registerClient(ClientRequest request) {
         int age = request.getBirthDate().until(java.time.LocalDate.now()).getYears();
 
