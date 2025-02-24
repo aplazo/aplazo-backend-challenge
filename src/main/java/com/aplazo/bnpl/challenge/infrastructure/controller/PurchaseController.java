@@ -3,6 +3,7 @@ package com.aplazo.bnpl.challenge.infrastructure.controller;
 import com.aplazo.bnpl.challenge.application.service.PurchaseService;
 import com.aplazo.bnpl.challenge.dto.PurchaseRequest;
 import com.aplazo.bnpl.challenge.dto.PurchaseResponse;
+import com.aplazo.bnpl.challenge.util.Loggable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,9 @@ public class PurchaseController {
     }
 
     @PostMapping("/register")
+    @Loggable(method = "POST /api/purchases/register")
     public ResponseEntity<PurchaseResponse> registerPurchase(@RequestBody PurchaseRequest request) {
         return ResponseEntity.ok(purchaseService.registerPurchase(request));
     }
+
 }
