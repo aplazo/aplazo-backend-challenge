@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
@@ -23,8 +25,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         this.purchaseRepository = purchaseRepository;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public PurchaseResponse registerPurchase(PurchaseRequest request) {
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("Client not found"));
@@ -33,10 +35,17 @@ public class PurchaseServiceImpl implements PurchaseService {
             throw new IllegalArgumentException("Purchase amount exceeds available credit line");
         }
 
+        // Allocation of payment scheme
         String paymentScheme = assignPaymentScheme(client.getName(), client.getId());
 
+        // Determination of interest based on the scheme
         BigDecimal interestRate = paymentScheme.equals("Scheme 1") ? BigDecimal.valueOf(0.13) : BigDecimal.valueOf(0.16);
-        BigDecimal totalAmount = request.getAmount().multiply(BigDecimal.ONE.add(interestRate));
+        BigDecimal commissionAmount = request.getAmount().multiply(interestRate);
+        BigDecimal totalAmount = request.getAmount().add(commissionAmount);
+        BigDecimal installmentAmount = totalAmount.divide(BigDecimal.valueOf(5), 2, BigDecimal.ROUND_HALF_UP);
+
+        // Generation of payment dates
+        List<LocalDate> paymentDueDates = generatePaymentDueDates(LocalDate.now(), 5, "Biweekly");
 
         Purchase purchase = new Purchase();
         purchase.setClient(client);
@@ -44,12 +53,22 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setPaymentScheme(paymentScheme);
         purchase.setNumberOfPayments(5);
         purchase.setInterestRate(interestRate);
+        purchase.setCommissionAmount(commissionAmount);
         purchase.setTotalAmount(totalAmount);
+        purchase.setInstallmentAmount(installmentAmount);
         purchase.setPurchaseDate(LocalDate.now());
+        purchase.setPaymentDueDates(paymentDueDates);
 
         purchase = purchaseRepository.save(purchase);
 
-        return new PurchaseResponse(purchase.getId(), purchase.getPaymentScheme(), purchase.getTotalAmount());
+        return new PurchaseResponse(
+                purchase.getId(),
+                purchase.getPaymentScheme(),
+                purchase.getTotalAmount(),
+                purchase.getCommissionAmount(),
+                purchase.getInstallmentAmount(),
+                purchase.getPaymentDueDates()
+        );
     }
 
     @Override
@@ -61,5 +80,21 @@ public class PurchaseServiceImpl implements PurchaseService {
         }
 
         return "Scheme 2";
+    }
+
+    @Override
+    public List<LocalDate> generatePaymentDueDates(LocalDate startDate, int numberOfPayments, String frequency) {
+        List<LocalDate> dueDates = new ArrayList<>();
+        LocalDate date = startDate;
+
+        for (int i = 1; i <= numberOfPayments; i++) {
+            if ("Biweekly".equalsIgnoreCase(frequency)) {
+                date = date.plusWeeks(2);
+            }
+
+            dueDates.add(date);
+        }
+
+        return dueDates;
     }
 }
