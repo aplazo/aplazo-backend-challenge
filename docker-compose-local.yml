@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: bnpl_db
+      POSTGRES_USER: bnpl_user
+      POSTGRES_PASSWORD: bnpl_password
+    ports:
+      - "5432:5432"
+  postgres-test:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: bnpl_db_test
+      POSTGRES_USER: bnpl_user
+      POSTGRES_PASSWORD: bnpl_password
+    ports:
+      - "5432:5432"

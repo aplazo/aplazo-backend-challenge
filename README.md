@@ -96,4 +96,3 @@ Please use the following tools to develop the project:
 
 
 > Development of the test must be done in a branch named `feature/[candidate's first name]_[candidate's last name]` (if there are conflicts, add the second last name), for example: `feature/juan_perez`. A pull request to the `master` branch of the repository should be made.
-
