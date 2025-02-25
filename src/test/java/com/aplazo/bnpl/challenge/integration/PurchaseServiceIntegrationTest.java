@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest
-@ActiveProfiles("test")  // Usa 'application-test.yml'
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 class PurchaseServiceIntegrationTest {
 

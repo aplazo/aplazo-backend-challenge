@@ -1,6 +1,5 @@
-package com.aplazo.bnpl.challenge.service;
+package com.aplazo.bnpl.challenge.application.service;
 
-import com.aplazo.bnpl.challenge.application.service.PurchaseServiceImpl;
 import com.aplazo.bnpl.challenge.dto.PurchaseRequest;
 import com.aplazo.bnpl.challenge.dto.PurchaseResponse;
 import com.aplazo.bnpl.challenge.domain.model.Client;
