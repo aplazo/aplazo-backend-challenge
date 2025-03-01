@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: bnpl
+      POSTGRES_USER: bnpl_user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bnpl
+      SPRING_DATASOURCE_USERNAME: bnpl_user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JWT_SECRET_KEY: "3F9vN1eMkzFvX8TqZdp5WxP2a7+4WmKkXzyBFL7Z01Q="

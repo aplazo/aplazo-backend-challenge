@@ -1,0 +1,3 @@
+com/bnpl/application/ClientServiceTest.class
+com/bnpl/application/PurchaseServiceTest.class
+com/bnpl/infrastructure/controller/ClientControllerTest.class
